@@ -2,7 +2,7 @@ const app = new Vue({
     el:'#app',
     data:{
         sitename:'EduXplore',
-        bannerimage: "images/playing 1.jpg",
+        bannerimage: "Vue.js App/images/playing 1.jpg",
         activity:{
             id: 1,
             title:"Football",
