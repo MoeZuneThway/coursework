@@ -1,14 +1,16 @@
 const app = new Vue({
     el:'#app',
     data:{
-        sitename:'Vue.js Pet Depot',
-        product:{
+        sitename:'EduXplore',
+        bannerimage: "images/playing 1.jpg",
+        activity:{
             id: 1,
-            title:"Cat Food, 25lb bag",
-            description:"A 25 pound bag of irresistible organic goodness for your cat.",
-            price: 20.00,
-            image: "cat.jpg",
-            availableIventory: 5,
+            title:"Football",
+            description:"Join our 3-month football training program for children!",
+            location:"Hendon, London",
+            price: 30.00,
+            image: "images/playing 1.jpg",
+            availableSpace: 10,
             
         },
         states: {
@@ -33,27 +35,37 @@ const app = new Vue({
             dontSendGift: 'Do Not Send As A Gift'
           },
         cart:[],
-        showProduct: true,
-        
+        showactivity: true,
+        type : 'Home'
     },
     computed:{
         cartItemCount(){
             return this.cart.length;
         },
         canAddtoCart(){
-            return this.product.availableIventory > this.cartItemCount;
+            return this.activity.availableSpace > this.cartItemCount;
         },
         canCheckout(){
             return this.cartItemCount > 0;
-        }
+        },
+        spaceLeft() {
+            return this.activity.availableSpace - this.cartItemCount;
+           }
     },
     methods:{
         addToCart(id){
-                this.cart.push(id);   
+                this.cart.push(id);  
         },
         showCheckout() {
-            this.showProduct = this.showProduct ? false : true 
+            this.showactivity = this.showactivity ? false : true;
+            console.log(this.showactivity);
             },
+            toActivity(){
+                this. type = "Activity"
+            },
+            toHome(){
+                this.type = "Home"
+            }
     }
     
 });

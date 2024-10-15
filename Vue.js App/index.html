@@ -21,21 +21,36 @@
         />
         <!-- Vue.js -->
         <script src="https://cdn.jsdelivr.net/npm/vue@2"></script>
+        <style>
+            .bannerlabel{
+                position: absolute;
+                top: 45%;
+                left: 50%;
+                transform: translate(-50%, -50%);
+                padding: 90px 200px;
+                text-align: center;
+                color: white    ;
+                font-size: 30px;
+            }
+        </style>
     </head>
 
     <body >
       <div id="app">
-        <header>
-            <section class="bg-light" >
+        <header class="sticky-top">
+            <section class="bg-white shadow" >
                 <div class="container">
                     <div class="row">
-                        <div class="d-flex py-3">
-                            <h3 class="me-auto">{{ sitename }}</h3>
-                            <button v-on:click="showCheckout"  v-if="canCheckout" class="btn border-1 border-dark">
+                        <div class="d-flex py-3 align-items-center   ">
+                            <h3 class="fs-3 fw-bolder" role="button" @click="toHome">{{ sitename }}</h3>
+                            <div class="d-flex ms-5 me-auto">
+                            <h6 class=" fs-5 fw-bolder mx-3" role="button" @click="toActivity">Our Classes</h6>
+                            </div>
+                            <button v-on:click="showCheckout"  v-if="canCheckout" class="btn border-1 border-dark p-2">
                                 <i class="bi bi-cart mx-2"></i>
                                 <span style="display: inline-block; transform: translateY(-10px);">{{ cartItemCount }}</span> Checkout
                             </button>
-                            <button v-else disabled="disabled">
+                            <button v-else disabled="disabled" class="p-2">
                                 <i class="bi bi-cart mx-2"></i>
                                 <span style="display: inline-block; transform: translateY(-10px);">{{ cartItemCount }}</span> Checkout
                             </button>
@@ -46,6 +61,48 @@
         </header>
         <main>
             <!-- Main content goes here -->
+             <section>
+                
+                  
+                    <div v-if="showactivity">
+                        <div class="position-relative" v-if="type ==='Home'">
+                            <img :src="bannerimage" alt="" class="w-100 " style="height: 800px;object-fit: cover;">
+                            <div class=" bannerlabel shadow rounded" >
+                                <p> Explore Fun Classes !</p>
+                                <button class="btn btn-dark" @click="toActivity">Explore</button>
+                            </div>
+                        </div>
+                        <div v-else-if="type ==='Activity'">
+                            <h1 class="fw-bolder text-center my-5">Our Fun Classes & Activities</h1>
+                            <div class="container my-5">
+                                <div class="row">
+                                    <div class="col-lg-4">
+                                        <div class="card rounded p-3">
+                                            <img src="images/playing 1.jpg" alt="" class="w-100 rounded">
+                                            <h3 class="my-2">Football</h3>
+                                            <p class="my-2">Join our 3-month football training program for children!</p>
+                                            <p class="my-2">Price : $30</p>
+                                            <button class="btn btn-dark p-2" @click="addToCart" v-if="canAddtoCart">Add to Cart</button>
+                                            
+                                                <button v-else  class="btn btn-danger" disabled="disabled">Add to Cart</button>
+                                                
+                                           
+                                            <span v-if='spaceLeft === 0' class="text-danger my-2">There are no available spaces in this class. Please consider other options.</span>
+                                            <span v-else-if="spaceLeft < 5" class="text-warning my-2">Only {{spaceLeft}} left!</span>
+                                            <span v-else class="text-success fw-bolder my-2">Buy now!</span>
+                                        </div>
+                                        
+                                    </div>
+                                    <div class="col-lg-4"></div>
+                                    <div class="col-lg-4"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div v-else>
+                        <h1>Checkout</h1>
+                    </div>
+             </section>
         </main>
         <footer>
             <!-- Footer content goes here -->
