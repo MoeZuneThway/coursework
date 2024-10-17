@@ -6,7 +6,7 @@ let activities = [
             location:"Hendon, London",
             price: 30.00,
             image: "Vue.js App/images/playing 1.jpg",
-            availableSpace: 10,
+            availableSpace: 15,
    },
    {
     id: 2,
@@ -33,7 +33,7 @@ let activities = [
     location:"Hendon, London",
     price: 10.00,
     image: "Vue.js App/images/artandpaint.jpg",
-    availableSpace: 10,
+    availableSpace: 13,
    },
    {
     id: 5,
@@ -42,7 +42,7 @@ let activities = [
     location:"Hendon, London",
     price: 10.00,
     image: "Vue.js App/images/artandcraft.jpg",
-    availableSpace: 10,
+    availableSpace: 15,
    },
    {
     id: 6,
@@ -51,7 +51,7 @@ let activities = [
     location:"Hendon, London",
     price: 40.00,
     image: "Vue.js App/images/fun camp.jpg",
-    availableSpace: 10,
+    availableSpace: 20,
    },
    {
     id: 7,
@@ -60,16 +60,16 @@ let activities = [
     location:"Colindale, London",
     price: 12.00,
     image: "Vue.js App/images/cycling.jpg",
-    availableSpace: 10,
+    availableSpace: 11,
    },
    {
     id: 8,
     title:"Coding for kids",
     description:"Let your kids get a taste of coding and programming! Join our 3-month fun coding program",
     location:"Hendon, London",
-    price: 30.00,
+    price: 50.00,
     image: "Vue.js App/images/coding.jpg",
-    availableSpace: 10,
+    availableSpace: 5,
    },
    {
     id: 9,
@@ -78,7 +78,7 @@ let activities = [
     location:"Edgware, London",
     price: 40.00,
     image: "Vue.js App/images/bakingandcooking.jpg",
-    availableSpace: 10,
+    availableSpace: 7,
    },
    {
     id: 10,
