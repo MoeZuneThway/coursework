@@ -43,9 +43,9 @@
                     <div class="container">
                         <div class="row">
                             <div class="d-flex py-3 align-items-center">
-                                <h3 class="fs-3 fw-bolder" role="button" @click="toHome">{{ sitename }}</h3>
+                                <h3 class="fs-3 fw-bolder" role="button" @click="navigate('Home')">{{ sitename }}</h3>
                                 <div class="d-flex ms-lg-5 me-auto">
-                                    <h6 class="fs-5 fw-bolder mx-3" role="button" @click="toActivity">Our Classes</h6>
+                                    <h6 class="fs-5 fw-bolder mx-3" role="button" @click="navigate('Activity')">Our Classes</h6>
                                 </div>
                                 <button v-on:click="showCheckout" v-if="canCheckout" class="btn border-1 border-dark p-2">
                                     <i class="fa-solid fa-cart-shopping"></i>
@@ -63,171 +63,195 @@
 
             <main>
                 <section>
-                    <div v-if="showactivity">
-                        <div class="position-relative" v-if="type === 'Home'">
+                    <div v-if="currentPage === 'Home'">
+                        <div class="position-relative">
                             <img :src="bannerimage" alt="" class="w-100" style="height: 800px; object-fit: cover;">
                             <div class="bannerlabel shadow rounded">
                                 <p>Explore Fun Classes!</p>
-                                <button class="btn btn-dark" @click="toActivity">Explore</button>
+                                <button class="btn btn-dark" @click="navigate('Activity')">Explore</button>
                             </div>
                         </div>
+                    </div>
                         
-                        <div v-else-if="type === 'Activity'">
-                            <h1 class="fw-bolder text-center my-5">Our Fun Classes & Activities</h1>
-                            <div class="container my-5">
-                                <div class="row">
-                                    <h5 class="fw-5 fw-bolder">Sorted By:</h5>
-                                    <div class="col-lg-2">
-                                        <div class="mb-3">
-
-                                            <select v-model="sortedcategory" class="form-control" name="sortedcategory">
-                            
-                                                <option v-for="(sortcategory, key) in sortcategories" v-bind:value="sortcategory">
-                                                  {{key}}
-                                                </option>
-                                              </select>
-                                        </div>
-                                    </div>
-                                    <div class="col-lg-2">
-                                        <div class="mb-3">
-
-                                            <select v-model="sortedorder" class="form-control">
-                                                <option v-for="(sortorder, key) in sortorders" v-bind:value="sortorder">
-                                                  {{key}}
-                                                </option>
-                                              </select>
-                                        </div>
+                    <div v-else-if="currentPage === 'Activity'">
+                        <h1 class="fw-bolder text-center my-5">Our Fun Classes & Activities</h1>
+                        <div class="container my-5">
+                            <div class="row">
+                                <h5 class="fw-5 fw-bolder">Sorted By:</h5>
+                                <div class="col-lg-2">
+                                    <div class="mb-3">
+                                        <select v-model="sortedcategory" class="form-control" name="sortedcategory">
+                                            <option v-for="(sortcategory, key) in sortcategories" v-bind:value="sortcategory">
+                                              {{key}}
+                                            </option>
+                                        </select>
                                     </div>
                                 </div>
-                                <div class="row">
-                                    <div class="col-lg-4 my-3" v-for="activity in sortedActivities" :key="activity.id">
-                                        <div class="card rounded p-3" >
-                                            <img :src="activity.image" alt="" class="w-100 rounded" style="height: 255px;">
-                                            <h3 class="my-2">{{ activity.title }}</h3>
-                                            <p class="my-2" style="height:70px ;">{{ activity.description }}</p>
-                                            <p class="my-2">Location: {{ activity.location }}</p>
-                                            <p class="my-2">Price: ${{ activity.price }}</p>
-                                            <button class="btn btn-dark p-2" @click="addToCart(activity)" v-if="canAddtoCart(activity)">Add to Cart</button>
-                                            <button v-else class="btn btn-danger" disabled="disabled">Add to Cart</button>
-                                            <span v-if="spaceLeft(activity) === 0" class="text-danger my-2">There are no available spaces in this class. Please consider other options.</span>
-                                            <span v-else-if="spaceLeft(activity) < 5" class="text-warning my-2">Only {{ spaceLeft(activity) }} spaces left! Join Fast!</span>
-                                            <span v-else class="text-success fw-bolder my-2">Join now!</span>
-                                        </div>
+                                <div class="col-lg-2">
+                                    <div class="mb-3">
+                                        <select v-model="sortedorder" class="form-control">
+                                            <option v-for="(sortorder, key) in sortorders" v-bind:value="sortorder">
+                                              {{key}}
+                                            </option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-lg-4 my-3" v-for="activity in sortedActivities" :key="activity.id">
+                                    <div class="card rounded p-3">
+                                        <img :src="activity.image" alt="" class="w-100 rounded" style="height: 255px;">
+                                        <h3 class="my-2">{{ activity.title }}</h3>
+                                        <p class="my-2" style="height:70px;">{{ activity.description }}</p>
+                                        <p class="my-2">Location: {{ activity.location }}</p>
+                                        <p class="my-2">Price: ${{ activity.price }}</p>
+                                        <p class="my-2">Space Left: {{  spaceLeft(activity) }}</p>
+                                        <button class="btn btn-dark p-2" @click="addToCart(activity)" v-if="canAddtoCart(activity)">Add to Cart</button>
+                                        <button v-else class="btn btn-danger" disabled="disabled">Add to Cart</button>
+                                        <span v-if="spaceLeft(activity) === 0" class="text-danger my-2">No spaces left. Consider other options.</span>
+                                        <span v-else-if="spaceLeft(activity) < 5" class="text-warning my-2">Only {{ spaceLeft(activity) }} spaces left! Join Fast!</span>
+                                        <span v-else class="text-success fw-bolder my-2">Join now!</span>
                                     </div>
                                 </div>
                             </div>
                         </div>
                     </div>
-                    <div v-else>
-                        <h1>Checkout</h1>
+
+                    <div v-else-if="currentPage === 'Checkout'">
+                        <div class="container my-5" v-if="showCart">
+                            <div class="row">
+                                <h3>Your cart:</h3>
+                            </div>
+                            <div class="row " >
+                                <div class="col-lg-4 my-3" v-for="activity in cart" :key="activity.cartItemId" >
+                                    <div class="card rounded p-3">
+                                        <img :src="activity.image" alt="" class="w-100 rounded" style="height: 255px;">
+                                        <h3 class="my-2">{{ activity.title }}</h3>
+                                        <p class="my-2" style="height:70px;">{{ activity.description }}</p>
+                                        <p class="my-2">Location: {{ activity.location }}</p>
+                                        <p class="my-2">Price: ${{ activity.price }}</p>
+                                        <p class="my-2">Space Left: {{  spaceLeft(activity) }}</p>
+                                        <button class="btn btn-danger p-2" @click="removeFromCart(activity)">Remove from cart</button>
+                                    </div>
+                                </div>
+                               
+                            </div>
+                           
+                        </div>
+
+                        <div class="container" v-else>
+                            <div class="row my-5">
+                                <div class="col-lg-8 mx-auto ">
+                                    <div class="p-5 shadow text-center">
+                                        <h3 class="text-danger">There are no items in the cart!</h3>
+                                    </div>
+                                        
+                                    
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Checkout Content Here -->
                     </div>
                 </section>
             </main>
         </div>
 
-        <!-- Move Vue script here -->
-        <script >
+        <!-- Vue Script -->
+        <script>
             const app = new Vue({
-    el: '#app',
-    data: {
-        sitename: 'EduXplore',
-        bannerimage: "Vue.js App/images/playing 1.jpg",
-        activities: activities,
-        sortcategories: {
-            Activity:'Activity',
-            Price: 'Price',
-            Location: 'Location',
-            Availability: 'Availability'
-           
-        },
-        sortedcategory: 'Activity',
-        sortedorder:'ASC',
-        sortorders:{
-            Ascending: 'ASC',
-            Descending: 'DSC'
-        },
-        order: {
-            firstName: '',
-            lastName: '',
-            address: '',
-            city: '',
-            zip: '',
-            state: '',
-            method: 'Home Address',
-            business: 'Business Address',
-            home: 'Home Address',
-            gift: 'Send As A Gift',
-            sendGift: 'Send As A Gift',
-            dontSendGift: 'Do Not Send As A Gift'
-        },
-        cart: [],
-        showactivity: true,
-        type: 'Home'
-    },
-    computed: {
-        cartItemCount() {
-            return this.cart.length;
-        },
-        canCheckout() {
-            return this.cartItemCount > 0;
-        },
-        sortedActivities() {
-        const sortKey = this.sortedcategory;  // Determine sorting based on selected category
-        const order = this.sortedorder;
-
-        function compare(a, b) {
-            let comparison = 0;
-
-            if (sortKey === 'Price') {
-                comparison = a.price - b.price;
-            } else if (sortKey === 'Activity') {
-                comparison = a.title.localeCompare(b.title);
-            } else if (sortKey === 'Location') {
-                comparison = a.location.localeCompare(b.location);
-            } else if (sortKey === 'Availability') {
-                comparison = a.availableSpace - b.availableSpace;
-            }
-
-            return order === 'ASC' ? comparison : -comparison;
-        }
-
-        // Sort the activities array based on the selected category and order
-        return this.activities.sort(compare);
-    }
-    },
-    methods: {
-        addToCart(activity) {
-            this.cart.push(activity.id);
-        },
-        canAddtoCart(activity) {
-            return activity.availableSpace > this.cartCount(activity.id);
-        },
-        cartCount(id) {
-            let count = 0;
-            for (let i = 0; i < this.cart.length; i++) {
-                if (this.cart[i] === id) {
-                    count++;
+                el: '#app',
+                data: {
+                    sitename: 'EduXplore',
+                    bannerimage: "Vue.js App/images/playing 1.jpg",
+                    activities: activities,
+                    sortcategories: {
+                        Activity:'Activity',
+                        Price: 'Price',
+                        Location: 'Location',
+                        Availability: 'Availability'
+                    },
+                    sortedcategory: 'Activity',
+                    sortedorder:'ASC',
+                    sortorders:{
+                        Ascending: 'ASC',
+                        Descending: 'DSC'
+                    },
+                    order: {},
+                    cart: [],
+                    currentPage: 'Home'  
+                },
+                computed: {
+                    cartItemCount() {
+                        return this.cart.length;
+                    },
+                    canCheckout() {
+                        return this.cartItemCount > 0;
+                    },
+                    sortedActivities() {
+                        const sortKey = this.sortedcategory;
+                        const order = this.sortedorder;
+        
+                        function compare(a, b) {
+                            let comparison = 0;
+                            if (sortKey === 'Price') {
+                                comparison = a.price - b.price;
+                            } else if (sortKey === 'Activity') {
+                                comparison = a.title.localeCompare(b.title);
+                            } else if (sortKey === 'Location') {
+                                comparison = a.location.localeCompare(b.location);
+                            } else if (sortKey === 'Availability') {
+                                comparison = a.availableSpace - b.availableSpace;
+                            }
+                            return order === 'ASC' ? comparison : -comparison;
+                        }
+                        return this.activities.sort(compare);
+                    },
+                    showCart(){
+                        return this.cart.length>0;
+                    }
+                },
+                methods: {
+                    removeFromCart(cartItem) {
+                        const index = this.cart.findIndex(item => item.cartItemId === cartItem.cartItemId);
+                        if (index !== -1) {
+                        this.cart.splice(index, 1);
+                        }
+                    },
+                    addToCart(activity) {
+                        const cartItem = {
+                         ...activity, 
+                        cartItemId: Date.now() + Math.random() 
+                        };
+                        this.cart.push(cartItem);
+                    },
+                    canAddtoCart(activity) {
+                        return activity.availableSpace > this.cartCount(activity.id);
+                    },
+                    cartCount(id) {
+                        let count = 0;
+                        for (let i = 0; i < this.cart.length; i++) {
+                            if (this.cart[i].id === id) {
+                                count++;
+                            }
+                        }
+                        return count;
+                    },
+                    spaceLeft(activity) {
+                        return activity.availableSpace - this.cartCount(activity.id);
+                    },
+                    showCheckout() {
+                        if (this.currentPage === 'Checkout') {
+                            this.currentPage = 'Activity';
+                        } else if (this.canCheckout) {
+                            this.currentPage = 'Checkout';
+                        }
+                    },
+                    navigate(page) {
+                        this.currentPage = page;
+                    }
                 }
-            }
-            return count;
-        },
-        spaceLeft(activity) {
-            return activity.availableSpace - this.cartCount(activity.id);
-        },
-        showCheckout() {
-            this.showactivity = !this.showactivity;
-            console.log(this.showactivity);
-        },
-        toActivity() {
-            this.type = "Activity";
-        },
-        toHome() {
-            this.type = "Home";
-        }
-    }
-});
-    
+            });
         </script>
-        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
     </body>
 </html>
