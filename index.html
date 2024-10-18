@@ -12,11 +12,6 @@
             href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"
             rel="stylesheet"
         />
-        <!-- Bootstrap Icons -->
-        <link
-            href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css"
-            rel="stylesheet"
-        />
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
         <!-- Vue.js -->
         <script src="https://cdn.jsdelivr.net/npm/vue@2"></script>
@@ -36,18 +31,14 @@
     </head>
 
     <body>
-        <!-- Main App Container -->
         <div id="app">
             <header class="sticky-top">
                 <section class="bg-white shadow">
                     <div class="container">
                         <div class="row">
-                            <div class="d-flex py-3 align-items-center">
-                                <h3 class="fs-3 fw-bolder" role="button" @click="navigate('Home')">{{ sitename }}</h3>
-                                <div class="d-flex ms-lg-5 me-auto">
-                                    <h6 class="fs-5 fw-bolder mx-3" role="button" @click="navigate('Activity')">Our Classes</h6>
-                                </div>
-                                <button v-on:click="showCheckout" v-if="canCheckout" class="btn border-1 border-dark p-2">
+                            <div class="d-flex py-3 align-items-center justify-content-between">
+                                <h3 class="fs-3 fw-bolder" role="button" v-on:click="showActivities">{{ sitename }}</h3>
+                                <button v-on:click="toggleCheckout" v-if="canCheckout" class="btn border-1 border-dark p-2">
                                     <i class="fa-solid fa-cart-shopping"></i>
                                     <span style="display: inline-block; transform: translateY(-10px);">{{ cartItemCount }}</span> Checkout
                                 </button>
@@ -60,20 +51,76 @@
                     </div>
                 </section>
             </header>
-
+        
             <main>
                 <section>
-                    <div v-if="currentPage === 'Home'">
-                        <div class="position-relative">
-                            <img :src="bannerimage" alt="" class="w-100" style="height: 800px; object-fit: cover;">
-                            <div class="bannerlabel shadow rounded">
-                                <p>Explore Fun Classes!</p>
-                                <button class="btn btn-dark" @click="navigate('Activity')">Explore</button>
+                    <!-- Checkout Page -->
+                    <div v-if="showCheckout">
+                        <div class="container my-5" v-if="showCart">
+                            <div class="row">
+                                <h3>Your cart: {{cartItemCount}} items</h3>
+                            </div>
+                            <div class="row">
+                                <div class="col-lg-4 my-3" v-for="activity in cart" :key="activity.cartItemId">
+                                    <div class="card rounded p-3">
+                                        <img :src="activity.image" alt="" class="w-100 rounded" style="height: 255px;">
+                                        <h3 class="my-2">{{ activity.title }}</h3>
+                                        <p class="my-2" style="height:70px;">{{ activity.description }}</p>
+                                        <p class="my-2">Location: {{ activity.location }}</p>
+                                        <p class="my-2">Price: ${{ activity.price }}</p>
+                                        <p class="my-2">Space Left: {{ spaceLeft(activity) }}</p>
+                                        <button class="btn btn-danger p-2" @click="removeFromCart(activity)">Remove from cart</button>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <h3 class="fw-bolder fs-4 text-center">Check Out</h3>
+                                <form action="">
+                                    <div class="col-lg-8 mx-auto">
+                                        <div class="mb-3">
+                                            <label for="" class="form-label">Name</label>
+                                            <input
+                                                type="text"
+                                                class="form-control"
+                                                placeholder=""
+                                                v-model="cusName"
+                                            />
+                                        </div>
+                                        <div class="mb-3">
+                                            <label for="" class="form-label">Phone Number</label>
+                                            <input
+                                                type="text"
+                                                class="form-control"
+                                                placeholder=""
+                                                v-model="cusPhone"
+                                            />
+                                        </div>
+                                        
+                                    </div>
+                                </form>
+                            </div>
+                            <div class="row">
+                               <div class="text-center">
+                                <button class="btn btn-primary" v-if="validated" @click="checkOut">CheckOut</button>
+                                <button class="btn " v-else disabled="disabled">CheckOut</button>
+                               </div>
+                            </div>
+                        </div>
+        
+                        <div class="container" v-else>
+                            <div class="row my-5">
+                                <div class="col-lg-8 mx-auto">
+                                    <div class="p-5 shadow text-center">
+                                        <h3 class="text-danger">There are no items in the cart!</h3>
+                                        <button class="btn btn-dark my-3" v-on:click="showActivities">Return</button>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
-                        
-                    <div v-else-if="currentPage === 'Activity'">
+        
+                    <!-- Activities Page -->
+                    <div v-else>
                         <h1 class="fw-bolder text-center my-5">Our Fun Classes & Activities</h1>
                         <div class="container my-5">
                             <div class="row">
@@ -82,30 +129,33 @@
                                     <div class="mb-3">
                                         <select v-model="sortedcategory" class="form-control" name="sortedcategory">
                                             <option v-for="(sortcategory, key) in sortcategories" v-bind:value="sortcategory">
-                                              {{key}}
+                                                {{key}}
                                             </option>
                                         </select>
                                     </div>
                                 </div>
-                                <div class="col-lg-2">
+                                <div class="col-lg-2 me-auto">
                                     <div class="mb-3">
                                         <select v-model="sortedorder" class="form-control">
                                             <option v-for="(sortorder, key) in sortorders" v-bind:value="sortorder">
-                                              {{key}}
+                                                {{key}}
                                             </option>
                                         </select>
                                     </div>
                                 </div>
+                                <div class="col-lg-4 ">
+                                    <input type="text" class="form-control" v-model="searchWord" placeholder="Search...">
+                                </div>
                             </div>
-                            <div class="row">
-                                <div class="col-lg-4 my-3" v-for="activity in sortedActivities" :key="activity.id">
+                            <div class="row" >
+                                <div class="col-lg-4 my-3" v-for="activity in sortedActivities" :key="activity.id" >
                                     <div class="card rounded p-3">
                                         <img :src="activity.image" alt="" class="w-100 rounded" style="height: 255px;">
                                         <h3 class="my-2">{{ activity.title }}</h3>
                                         <p class="my-2" style="height:70px;">{{ activity.description }}</p>
                                         <p class="my-2">Location: {{ activity.location }}</p>
                                         <p class="my-2">Price: ${{ activity.price }}</p>
-                                        <p class="my-2">Space Left: {{  spaceLeft(activity) }}</p>
+                                        <p class="my-2">Space Left: {{ spaceLeft(activity) }}</p>
                                         <button class="btn btn-dark p-2" @click="addToCart(activity)" v-if="canAddtoCart(activity)">Add to Cart</button>
                                         <button v-else class="btn btn-danger" disabled="disabled">Add to Cart</button>
                                         <span v-if="spaceLeft(activity) === 0" class="text-danger my-2">No spaces left. Consider other options.</span>
@@ -114,71 +164,43 @@
                                     </div>
                                 </div>
                             </div>
-                        </div>
-                    </div>
-
-                    <div v-else-if="currentPage === 'Checkout'">
-                        <div class="container my-5" v-if="showCart">
-                            <div class="row">
-                                <h3>Your cart:</h3>
-                            </div>
-                            <div class="row " >
-                                <div class="col-lg-4 my-3" v-for="activity in cart" :key="activity.cartItemId" >
-                                    <div class="card rounded p-3">
-                                        <img :src="activity.image" alt="" class="w-100 rounded" style="height: 255px;">
-                                        <h3 class="my-2">{{ activity.title }}</h3>
-                                        <p class="my-2" style="height:70px;">{{ activity.description }}</p>
-                                        <p class="my-2">Location: {{ activity.location }}</p>
-                                        <p class="my-2">Price: ${{ activity.price }}</p>
-                                        <p class="my-2">Space Left: {{  spaceLeft(activity) }}</p>
-                                        <button class="btn btn-danger p-2" @click="removeFromCart(activity)">Remove from cart</button>
+                            <div class="row my-5" v-if="sortedActivities == ''">
+                                <div class="col-lg-8 mx-auto">
+                                    <div class="p-5 rounded shadow bg-danger text-center">
+                                        <h3 class="text-white">There is no matched search!</h3>
                                     </div>
                                 </div>
-                               
-                            </div>
-                           
-                        </div>
-
-                        <div class="container" v-else>
-                            <div class="row my-5">
-                                <div class="col-lg-8 mx-auto ">
-                                    <div class="p-5 shadow text-center">
-                                        <h3 class="text-danger">There are no items in the cart!</h3>
-                                    </div>
-                                        
-                                    
-                                </div>
                             </div>
                         </div>
-                        <!-- Checkout Content Here -->
                     </div>
                 </section>
             </main>
         </div>
-
+        
         <!-- Vue Script -->
         <script>
             const app = new Vue({
                 el: '#app',
                 data: {
                     sitename: 'EduXplore',
-                    bannerimage: "Vue.js App/images/playing 1.jpg",
                     activities: activities,
                     sortcategories: {
-                        Activity:'Activity',
+                        Activity: 'Activity',
                         Price: 'Price',
                         Location: 'Location',
                         Availability: 'Availability'
                     },
                     sortedcategory: 'Activity',
-                    sortedorder:'ASC',
-                    sortorders:{
+                    sortedorder: 'ASC',
+                    sortorders: {
                         Ascending: 'ASC',
                         Descending: 'DSC'
                     },
-                    order: {},
                     cart: [],
-                    currentPage: 'Home'  
+                    showCheckout: false, 
+                    cusName : '',
+                    cusPhone: '',
+                    searchWord: '',
                 },
                 computed: {
                     cartItemCount() {
@@ -190,37 +212,48 @@
                     sortedActivities() {
                         const sortKey = this.sortedcategory;
                         const order = this.sortedorder;
+
+                        let filteredActivities = this.activities.filter(activity => {
+                            return activity.title.toLowerCase().includes(this.searchWord.toLowerCase()) || activity.location.toLowerCase().includes(this.searchWord.toLowerCase()) || activity.description.toLowerCase().includes(this.searchWord.toLowerCase()) ||activity.price.toString().includes(this.searchWord) ||activity.availableSpace.toString().includes(this.searchWord);
+                             });
+
         
+
                         function compare(a, b) {
-                            let comparison = 0;
-                            if (sortKey === 'Price') {
-                                comparison = a.price - b.price;
-                            } else if (sortKey === 'Activity') {
-                                comparison = a.title.localeCompare(b.title);
-                            } else if (sortKey === 'Location') {
-                                comparison = a.location.localeCompare(b.location);
-                            } else if (sortKey === 'Availability') {
-                                comparison = a.availableSpace - b.availableSpace;
-                            }
+                        let comparison = 0;
+                        if (sortKey === 'Price') {
+                            comparison = a.price - b.price;
+                        } else if (sortKey === 'Activity') {
+                            comparison = a.title.localeCompare(b.title);
+                        } else if (sortKey === 'Location') {
+                            comparison = a.location.localeCompare(b.location);
+                        } else if (sortKey === 'Availability') {
+                            comparison = a.availableSpace - b.availableSpace;
+                        }
                             return order === 'ASC' ? comparison : -comparison;
                         }
-                        return this.activities.sort(compare);
+                            return filteredActivities.sort(compare);
                     },
-                    showCart(){
-                        return this.cart.length>0;
-                    }
+                    showCart() {
+                        return this.cart.length > 0;
+                    },
+                    validated(){
+                        const validateName = /^[a-zA-Z]+$/;
+                        const validatePhone = /^\d+$/;
+                        return validateName.test(this.cusName) && validatePhone.test(this.cusPhone.toString());
+                    },
                 },
                 methods: {
                     removeFromCart(cartItem) {
                         const index = this.cart.findIndex(item => item.cartItemId === cartItem.cartItemId);
                         if (index !== -1) {
-                        this.cart.splice(index, 1);
+                            this.cart.splice(index, 1);
                         }
                     },
                     addToCart(activity) {
                         const cartItem = {
-                         ...activity, 
-                        cartItemId: Date.now() + Math.random() 
+                            ...activity,
+                            cartItemId: Date.now() + Math.random()
                         };
                         this.cart.push(cartItem);
                     },
@@ -239,15 +272,14 @@
                     spaceLeft(activity) {
                         return activity.availableSpace - this.cartCount(activity.id);
                     },
-                    showCheckout() {
-                        if (this.currentPage === 'Checkout') {
-                            this.currentPage = 'Activity';
-                        } else if (this.canCheckout) {
-                            this.currentPage = 'Checkout';
-                        }
+                    toggleCheckout() {
+                        this.showCheckout = !this.showCheckout;
                     },
-                    navigate(page) {
-                        this.currentPage = page;
+                    showActivities(){
+                        this.showCheckout = false;
+                    },
+                    checkOut(){
+                        alert('Checkout successful');
                     }
                 }
             });
