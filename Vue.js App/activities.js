@@ -5,7 +5,7 @@ let activities = [
             description:"Join our 3-month football training program for children!",
             location:"Hendon, London",
             price: 30.00,
-            image: "Vue.js App/images/playing 1.jpg",
+            image: "images/playing 1.jpg",
             availableSpace: 15,
    },
    {
@@ -14,7 +14,7 @@ let activities = [
     description:"Join our 2-month maths program for children!",
     location:"Colindale, London",
     price: 18.00,
-    image: "Vue.js App/images/maths.jpg",
+    image: "images/maths.jpg",
     availableSpace: 10,
    },
    {
@@ -23,7 +23,7 @@ let activities = [
     description:"Join our 3-month swimming training program for children taught by 'Professionals'!",
     location:"Edgware, London",
     price: 40.00,
-    image: "Vue.js App/images/swim.jpg",
+    image: "images/swim.jpg",
     availableSpace: 10,
    },
    {
@@ -32,7 +32,7 @@ let activities = [
     description:"Join our 4-week art and paint program for kiddos!",
     location:"Hendon, London",
     price: 10.00,
-    image: "Vue.js App/images/artandpaint.jpg",
+    image: "images/artandpaint.jpg",
     availableSpace: 13,
    },
    {
@@ -41,7 +41,7 @@ let activities = [
     description:"Join our 4-week art and craft program for children!",
     location:"Hendon, London",
     price: 10.00,
-    image: "Vue.js App/images/artandcraft.jpg",
+    image: "images/artandcraft.jpg",
     availableSpace: 15,
    },
    {
@@ -50,7 +50,7 @@ let activities = [
     description:"Join our 20-day fun camp for children which will allow the kids to learn some basic skills to be independent!",
     location:"Hendon, London",
     price: 40.00,
-    image: "Vue.js App/images/fun camp.jpg",
+    image: "images/fun camp.jpg",
     availableSpace: 20,
    },
    {
@@ -59,7 +59,7 @@ let activities = [
     description:"Join our 1-month cycling program for children!",
     location:"Colindale, London",
     price: 12.00,
-    image: "Vue.js App/images/cycling.jpg",
+    image: "images/cycling.jpg",
     availableSpace: 11,
    },
    {
@@ -68,7 +68,7 @@ let activities = [
     description:"Let your kids get a taste of coding and programming! Join our 3-month fun coding program",
     location:"Hendon, London",
     price: 50.00,
-    image: "Vue.js App/images/coding.jpg",
+    image: "images/coding.jpg",
     availableSpace: 5,
    },
    {
@@ -77,7 +77,7 @@ let activities = [
     description:"Join our 3-month Baking and Cooking training program for kids!",
     location:"Edgware, London",
     price: 40.00,
-    image: "Vue.js App/images/bakingandcooking.jpg",
+    image: "images/bakingandcooking.jpg",
     availableSpace: 7,
    },
    {
@@ -86,7 +86,7 @@ let activities = [
     description:"Let your children explore more about music and instruments! Join our 3-month music introductory program for children!",
     location:"Hendon, London",
     price: 30.00,
-    image: "Vue.js App/images/music.jpg",
+    image: "images/music.jpg",
     availableSpace: 10,
    },
    ];
